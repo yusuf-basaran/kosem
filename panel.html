@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Yönetim paneli · Köşem</title>
+    <meta
+      name="description"
+      content="Köşem: Kendi blogunu oluştur, düşüncelerini paylaş, yeni hikâyeler keşfet."
+    />
+    <meta name="theme-color" content="#FAF7F2" />
+    <script src="/js/preference.js"></script>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Inter:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Literata:wght@400;500;600&family=Lora:wght@400;500;600;700&family=Merriweather:wght@400;700&family=Nunito+Sans:wght@400;600;700&family=Source+Serif+4:wght@400;500;600;700&family=Work+Sans:wght@400;500;600&subset=latin-ext&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/bilesenler.css" />
+    <link rel="stylesheet" href="/css/tema.css" />
+    <script src="/vendor/marked.min.js" defer></script>
+    <script src="/vendor/purify.min.js" defer></script>
+    <script type="module" src="/js/app.js"></script>
+  </head>
+  <body data-page="panel">
+    <a class="skip-link" href="#main">İçeriğe geç</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="/" aria-label="Köşem ana sayfa"
+          >Kö<span>ş</span>em</a
+        >
+        <nav aria-label="Ana menü">
+          <a href="/" data-nav="home">Keşfet</a
+          ><a href="/index.html?tab=blogs" data-nav="blogs">Bloglar</a>
+        </nav>
+        <button
+          id="site-theme-toggle"
+          class="theme-toggle"
+          type="button"
+          aria-pressed="false"
+        >
+          Koyu görünüm
+        </button>
+        <div class="header-actions" id="account-nav">
+          <a href="/giris.html" class="login-link">Giriş yap</a
+          ><a href="/kayit.html" class="button small"
+            >Blog aç <span aria-hidden="true">↗</span></a
+          >
+        </div>
+      </div>
+    </header>
+    <main id="main" class="page-container">
+      <div class="panel-heading">
+        <div>
+          <div class="eyebrow">SANA AİT ALAN</div>
+          <h1 id="welcome-title">Blogunu yönet</h1>
+          <p class="muted">Hikâyelerin, görünümün ve küçük dokunuşların.</p>
+        </div>
+        <a href="/editor.html" class="button">+ Yeni yazı</a>
+      </div>
+      <p id="demo-note" class="notice" hidden>
+        Önizleme paneli. Değişiklikler sunucuya kaydedilmez. Gerçek hesabın için
+        Firebase bağlantısını tamamla.
+      </p>
+      <div class="panel-layout">
+        <nav class="panel-nav" aria-label="Panel menüsü">
+          <button data-panel="posts" disabled class="active">
+            Yazılarım <span aria-hidden="true">↗</span></button
+          ><button data-panel="profile" disabled>
+            Profilim <span aria-hidden="true">↗</span></button
+          ><button data-panel="theme" disabled>
+            Tema ve renkler <span aria-hidden="true">↗</span></button
+          ><button data-panel="layout" disabled>
+            Sayfa düzeni <span aria-hidden="true">↗</span></button
+          ><a id="my-blog-link" href="/blog.html"
+            >Blogumu gör <span aria-hidden="true">↗</span></a
+          >
+        </nav>
+        <div class="panel-content">
+          <section id="panel-posts">
+            <div class="section-title-row">
+              <h2>Yazılarım</h2>
+              <span class="muted"
+                >Taslaklarını büyüt, hikâyelerini paylaş.</span
+              >
+            </div>
+            <div id="my-posts" aria-live="polite">
+              <p class="loading">Yazıların yükleniyor…</p>
+            </div>
+            <button id="more-my-posts" class="button outline" hidden>
+              Daha fazla yükle
+            </button>
+          </section>
+          <section id="panel-profile" hidden>
+            <h2>Profilim</h2>
+            <form id="profile-form" class="settings-form">
+              <div class="profile-images">
+                <div>
+                  <img
+                    id="profile-avatar"
+                    class="profile-avatar"
+                    src="/assets/placeholder.svg"
+                    alt="Profil görseli"
+                  /><label class="upload-label" for="avatar-file"
+                    >Profil fotoğrafı seç</label
+                  ><input
+                    id="avatar-file"
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
+                  />
+                </div>
+                <div class="cover-upload">
+                  <img
+                    id="profile-cover"
+                    src="/assets/placeholder.svg"
+                    alt="Blog kapağı"
+                  /><label class="upload-label" for="profile-cover-file"
+                    >Kapak görseli seç</label
+                  ><input
+                    id="profile-cover-file"
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
+                  />
+                </div>
+              </div>
+              <small
+                >JPG, PNG, WebP, GIF veya AVIF. Görsel başına en fazla 2
+                MB.</small
+              >
+              <div class="field">
+                <label for="profile-name">Görünen ad</label
+                ><input id="profile-name" required maxlength="80" />
+              </div>
+              <div class="field">
+                <label for="profile-username">Kullanıcı adı</label
+                ><input id="profile-username" disabled /><small
+                  >Blog adresinin sabit kalması için değiştirilemez.</small
+                >
+              </div>
+              <div class="field">
+                <label for="profile-bio">Hakkında</label
+                ><textarea
+                  id="profile-bio"
+                  maxlength="500"
+                  rows="4"
+                  placeholder="Okurlarına kendinden biraz bahset."
+                ></textarea>
+              </div>
+              <button class="button" type="submit">
+                Değişiklikleri kaydet
+              </button>
+            </form>
+          </section>
+          <section id="panel-theme" hidden>
+            <div class="section-title-row">
+              <h2>Tema ve renkler</h2>
+              <button id="save-theme" class="button small">
+                Temayı kaydet
+              </button>
+            </div>
+            <p class="muted">
+              Bir temayla başla, küçük dokunuşlarla kendine ait kıl.
+            </p>
+            <div class="customize-grid">
+              <div>
+                <div id="theme-presets" class="theme-presets"></div>
+                <form id="theme-form">
+                  <div class="field">
+                    <label for="theme-mode">Görünüm</label
+                    ><select id="theme-mode">
+                      <option value="acik">Açık</option>
+                      <option value="koyu">Koyu</option>
+                    </select>
+                  </div>
+                  <div id="color-fields" class="color-fields"></div>
+                  <div class="field">
+                    <label for="theme-font">Yazı tipi</label
+                    ><select id="theme-font"></select>
+                  </div>
+                  <div class="two-fields">
+                    <div class="field">
+                      <label for="theme-radius">Köşeler</label
+                      ><select id="theme-radius">
+                        <option value="keskin">Keskin</option>
+                        <option value="yumusak">Yumuşak</option>
+                        <option value="yuvarlak">Yuvarlak</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label for="theme-density">Aralıklar</label
+                      ><select id="theme-density">
+                        <option value="rahat">Rahat</option>
+                        <option value="sikisik">Sıkışık</option>
+                      </select>
+                    </div>
+                  </div>
+                </form>
+                <p id="contrast-note" class="form-help" role="status"></p>
+              </div>
+              <div class="preview-shell">
+                <div class="preview-toolbar">
+                  <span>CANLI ÖNİZLEME</span>
+                  <div>
+                    <button
+                      class="preview-device active"
+                      data-device="desktop"
+                      aria-pressed="true"
+                    >
+                      Masaüstü</button
+                    ><button
+                      class="preview-device"
+                      data-device="mobile"
+                      aria-pressed="false"
+                    >
+                      Mobil
+                    </button>
+                  </div>
+                </div>
+                <div id="theme-preview" class="blog-preview"></div>
+              </div>
+            </div>
+          </section>
+          <section id="panel-layout" hidden>
+            <div class="section-title-row">
+              <h2>Sayfa düzeni</h2>
+              <button id="save-layout" class="button small">
+                Düzeni kaydet
+              </button>
+            </div>
+            <p class="muted">
+              Blokları sürükleyerek veya oklarla sırala. En fazla 8 blok
+              ekleyebilirsin.
+            </p>
+            <div class="customize-grid">
+              <div>
+                <div class="field">
+                  <label for="layout-mode">Genel düzen</label
+                  ><select id="layout-mode">
+                    <option value="tek">Tek sütun</option>
+                    <option value="yan">Yan panelli</option>
+                    <option value="iki">İki sütunlu</option>
+                  </select>
+                </div>
+                <div id="block-list" class="block-list"></div>
+                <div class="add-block">
+                  <label class="sr-only" for="add-block-type"
+                    >Eklenecek blok türü</label
+                  ><select id="add-block-type"></select
+                  ><button id="add-block" class="button outline">+ Ekle</button>
+                </div>
+              </div>
+              <div class="preview-shell">
+                <div class="preview-toolbar">
+                  <span>CANLI ÖNİZLEME</span>
+                  <div>
+                    <button
+                      class="preview-device active"
+                      data-device="desktop"
+                      aria-pressed="true"
+                    >
+                      Masaüstü</button
+                    ><button
+                      class="preview-device"
+                      data-device="mobile"
+                      aria-pressed="false"
+                    >
+                      Mobil
+                    </button>
+                  </div>
+                </div>
+                <div id="layout-preview" class="blog-preview"></div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+      <dialog id="delete-dialog">
+        <h2>Bu yazı silinsin mi?</h2>
+        <p>Silinen yazılar geri getirilemez.</p>
+        <div class="dialog-actions">
+          <button id="cancel-delete" class="button outline">Vazgeç</button
+          ><button id="confirm-delete" class="button danger">Yazıyı sil</button>
+        </div>
+      </dialog>
+    </main>
+    <footer class="site-footer">
+      <a class="brand" href="/">Kö<span>ş</span>em</a
+      ><span>Herkesin bir köşesi var.</span
+      ><span class="footer-note">Okumaya, yazmaya ve paylaşmaya alan.</span>
+    </footer>
+    <div id="toast" class="toast" role="status" hidden></div>
+  </body>
+</html>

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Blog · Köşem</title>
+    <meta
+      name="description"
+      content="Köşem: Kendi blogunu oluştur, düşüncelerini paylaş, yeni hikâyeler keşfet."
+    />
+    <meta name="theme-color" content="#FAF7F2" />
+    <script src="/js/preference.js"></script>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Inter:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Literata:wght@400;500;600&family=Lora:wght@400;500;600;700&family=Merriweather:wght@400;700&family=Nunito+Sans:wght@400;600;700&family=Source+Serif+4:wght@400;500;600;700&family=Work+Sans:wght@400;500;600&subset=latin-ext&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/bilesenler.css" />
+    <link rel="stylesheet" href="/css/tema.css" />
+    <script src="/vendor/marked.min.js" defer></script>
+    <script src="/vendor/purify.min.js" defer></script>
+    <script type="module" src="/js/app.js"></script>
+  </head>
+  <body data-page="blog">
+    <a class="skip-link" href="#main">İçeriğe geç</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="/" aria-label="Köşem ana sayfa"
+          >Kö<span>ş</span>em</a
+        >
+        <nav aria-label="Ana menü">
+          <a href="/" data-nav="home">Keşfet</a
+          ><a href="/index.html?tab=blogs" data-nav="blogs">Bloglar</a>
+        </nav>
+        <button
+          id="site-theme-toggle"
+          class="theme-toggle"
+          type="button"
+          aria-pressed="false"
+        >
+          Koyu görünüm
+        </button>
+        <div class="header-actions" id="account-nav">
+          <a href="/giris.html" class="login-link">Giriş yap</a
+          ><a href="/kayit.html" class="button small"
+            >Blog aç <span aria-hidden="true">↗</span></a
+          >
+        </div>
+      </div>
+    </header>
+    <main id="main" class="page-container">
+      <div id="blog-root" class="public-blog" aria-live="polite">
+        <p class="loading">Blog yükleniyor…</p>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <a class="brand" href="/">Kö<span>ş</span>em</a
+      ><span>Herkesin bir köşesi var.</span
+      ><span class="footer-note">Okumaya, yazmaya ve paylaşmaya alan.</span>
+    </footer>
+    <div id="toast" class="toast" role="status" hidden></div>
+  </body>
+</html>

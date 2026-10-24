@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hikâyelerin buluştuğu yer · Köşem</title>
+    <meta
+      name="description"
+      content="Köşem: Kendi blogunu oluştur, düşüncelerini paylaş, yeni hikâyeler keşfet."
+    />
+    <meta name="theme-color" content="#FAF7F2" />
+    <script src="/js/preference.js"></script>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Inter:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Literata:wght@400;500;600&family=Lora:wght@400;500;600;700&family=Merriweather:wght@400;700&family=Nunito+Sans:wght@400;600;700&family=Source+Serif+4:wght@400;500;600;700&family=Work+Sans:wght@400;500;600&subset=latin-ext&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/bilesenler.css" />
+    <link rel="stylesheet" href="/css/tema.css" />
+    <script src="/vendor/marked.min.js" defer></script>
+    <script src="/vendor/purify.min.js" defer></script>
+    <script type="module" src="/js/app.js"></script>
+  </head>
+  <body data-page="home">
+    <a class="skip-link" href="#main">İçeriğe geç</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="/" aria-label="Köşem ana sayfa"
+          >Kö<span>ş</span>em</a
+        >
+        <nav aria-label="Ana menü">
+          <a href="/" data-nav="home">Keşfet</a
+          ><a href="/index.html?tab=blogs" data-nav="blogs">Bloglar</a>
+        </nav>
+        <button
+          id="site-theme-toggle"
+          class="theme-toggle"
+          type="button"
+          aria-pressed="false"
+        >
+          Koyu görünüm
+        </button>
+        <div class="header-actions" id="account-nav">
+          <a href="/giris.html" class="login-link">Giriş yap</a
+          ><a href="/kayit.html" class="button small"
+            >Blog aç <span aria-hidden="true">↗</span></a
+          >
+        </div>
+      </div>
+    </header>
+    <main id="main" class="page-container">
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow">
+            <span class="tiny-line"></span> DÜŞÜNCELERE YER AÇ
+          </div>
+          <h1>Herkesin bir<br /><em>köşesi</em> var.</h1>
+          <p>
+            Düşüncelerine bir köşe aç. Yaz, paylaş ve<br />başka dünyalara
+            misafir ol.
+          </p>
+          <a href="/kayit.html" class="button"
+            >Kendi blogunu oluştur <span aria-hidden="true">↗</span></a
+          >
+          <div class="hero-community">
+            <div class="avatar-stack" id="hero-avatars"></div>
+            <span>Merak edenlerin, anlatacakları olanların yeri.</span>
+          </div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="art-grid"></div>
+          <div class="art-note">
+            <div class="note-label">KENDİNE BİR ALAN AÇ</div>
+            <div class="note-title">Söyleyeceklerin<br />burada yer bulur.</div>
+            <div class="note-lines"><i></i><i></i><i></i></div>
+            <span class="note-signature">Senin kelimelerin. Senin dünyan.</span
+            ><svg class="art-leaf" viewBox="0 0 180 220" fill="none">
+              <path
+                d="M90 220C80 155 104 85 143 20M101 153C58 158 28 132 25 103c39-3 65 16 76 50ZM116 112c-13-38-6-75 15-91 24 25 18 62-15 91ZM89 190c41-30 73-25 84-8-20 26-51 30-84 8Z"
+                fill="#315b43"
+              />
+              <path
+                d="M91 219c2-70 17-135 52-199"
+                stroke="#315b43"
+                stroke-width="3"
+              />
+            </svg>
+          </div>
+          <div class="art-tag">
+            <span class="tag-dot"></span> Herkesin bir köşesi var.
+          </div>
+          <span class="art-spark" aria-hidden="true">+</span>
+        </div>
+      </section>
+      <section class="discovery" id="discover">
+        <div class="section-top">
+          <div>
+            <div class="eyebrow">OKUMAYA DEĞER</div>
+            <h2>Köşelerden yeni hikâyeler</h2>
+          </div>
+          <p class="muted">Bir fincan kahveye eşlik edecek hikâyeler.</p>
+        </div>
+        <div class="discovery-toolbar">
+          <div class="tabs" role="group" aria-label="İçerik türü">
+            <button class="tab active" id="tab-posts" type="button">
+              Son yazılar</button
+            ><button class="tab" id="tab-blogs" type="button">
+              Blogları keşfet
+            </button>
+          </div>
+          <form id="search-form" role="search" class="search-box">
+            <svg
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              aria-hidden="true"
+            >
+              <circle cx="10" cy="10" r="6" />
+              <path d="m15 15 5 5" /></svg
+            ><label class="sr-only" for="search"
+              >Başlığın başlangıcını ara</label
+            ><input
+              id="search"
+              placeholder="Yazılarda ara…"
+              maxlength="160"
+              type="search"
+            /><button type="submit" class="sr-only">Ara</button>
+          </form>
+        </div>
+        <div
+          id="category-filters"
+          class="category-filters"
+          role="group"
+          aria-label="Kategori"
+        ></div>
+        <div class="content-layout">
+          <div>
+            <div id="feed" class="post-grid" aria-live="polite">
+              <p class="loading">Yazılar yükleniyor…</p>
+            </div>
+            <div class="load-more-wrap">
+              <button
+                id="load-more"
+                class="button outline"
+                type="button"
+                hidden
+              >
+                Daha fazla göster <span aria-hidden="true">↓</span>
+              </button>
+            </div>
+          </div>
+          <aside class="discover-sidebar">
+            <section class="sidebar-section">
+              <div class="sidebar-heading">
+                <h3>Takip etmeye değer</h3>
+                <span class="small-label">BLOG SEÇKİSİ</span>
+              </div>
+              <div id="blog-list"></div>
+              <button id="all-blogs" class="text-button">
+                Tüm blogları keşfet <span aria-hidden="true">↗</span>
+              </button>
+            </section>
+            <section class="write-invite">
+              <span class="eyebrow">SENİN HİKÂYEN NE?</span>
+              <h3>İlk satırını<br />bugün yaz.</h3>
+              <p>Kendi tarzında bir blog.<br />Geriye sadece yazmak kalsın.</p>
+              <a href="/kayit.html" class="text-link"
+                >Ücretsiz başla <span aria-hidden="true">↗</span></a
+              ><svg
+                width="62"
+                height="40"
+                viewBox="0 0 62 40"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M4 31c15-32 26-26 19-12S8 43 23 32 49 8 57 6M42 7l16-2-3 15"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+              </svg>
+            </section>
+            <div class="sidebar-footnote">
+              Güzel fikirler paylaştıkça çoğalır.
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <a class="brand" href="/">Kö<span>ş</span>em</a
+      ><span>Herkesin bir köşesi var.</span
+      ><span class="footer-note">Okumaya, yazmaya ve paylaşmaya alan.</span>
+    </footer>
+    <div id="toast" class="toast" role="status" hidden></div>
+  </body>
+</html>

@@ -1,0 +1,104 @@
+rules_version = '2';
+service cloud.firestore {
+ match /databases/{database}/documents {
+  function signedIn() { return request.auth != null; }
+  function own(uid) { return signedIn() && request.auth.uid == uid; }
+  function usernameValid(name) {
+   return name is string && name.matches('^[a-z0-9-]{3,20}$') && !(name in ['admin','panel','giris','kayit','editor','api','blog','yazi','satir','kosem','destek','settings','auth','www','firebase','assets','css','js']);
+  }
+  function text(value, max) { return value is string && value.size() <= max; }
+  function url(value, max) { return text(value, max) && (value == '' || value.matches('https://[^\\s]+')); }
+  function hex(value) { return value is string && value.matches('^#[0-9a-fA-F]{6}$'); }
+  function themeValid(t) {
+   return t is map && t.size() == 5 && t.keys().hasAll(['mod','renkler','font','kose','yogunluk'])
+    && t.mod in ['acik','koyu'] && t.font in ['DM Sans','Inter','Lora','Merriweather','Source Serif 4','Literata','Nunito Sans','Work Sans','Libre Baskerville']
+    && t.kose in ['keskin','yumusak','yuvarlak'] && t.yogunluk in ['rahat','sikisik']
+    && t.renkler is map && t.renkler.size() == 4 && t.renkler.keys().hasAll(['arkaplan','yazi','vurgu','kart'])
+    && hex(t.renkler.arkaplan) && hex(t.renkler.yazi) && hex(t.renkler.vurgu) && hex(t.renkler.kart);
+  }
+  function blockValid(b) {
+   let a = b.ayar;
+   let t = b.tip;
+   return b.size() == 3 && b.id.matches('^[a-zA-Z0-9_-]{1,40}$') && a.gorunur is bool && a.genislik in ['tam','yarim'] && (
+    a.size() == 2 ? t in ['kapak','hakkimda','kategoriler']
+    : t == 'sosyal_baglantilar' ? a.size() == 6 && a.website.matches('^(|https://[^\\s]{1,492})$') && a.instagram.matches('^(|https://[^\\s]{1,492})$') && a.github.matches('^(|https://[^\\s]{1,492})$') && a.linkedin.matches('^(|https://[^\\s]{1,492})$')
+    : t == 'yazilar' ? a.size() == 4 && a.gorunum in ['izgara','liste'] && a.sutun is int && a.sutun in [1,2,3]
+    : t == 'metin_kutusu' ? a.size() == 4 && a.baslik is string && a.baslik.size() <= 100 && a.metin is string && a.metin.size() <= 2000
+    : t == 'one_cikan_yazi' && a.size() == 3 && a.postId is string && a.postId.size() <= 128
+   );
+  }
+  function layoutValid(l) {
+   return l is list && l.size() <= 8
+    && (l.size() <= 0 || blockValid(l[0]))
+    && (l.size() <= 1 || blockValid(l[1]))
+    && (l.size() <= 2 || blockValid(l[2]))
+    && (l.size() <= 3 || blockValid(l[3]))
+    && (l.size() <= 4 || blockValid(l[4]))
+    && (l.size() <= 5 || blockValid(l[5]))
+    && (l.size() <= 6 || blockValid(l[6]))
+    && (l.size() <= 7 || blockValid(l[7]))
+   ;
+  }
+  function userValid(u, previous) {
+   return u.keys().hasAll(['username','displayName','bio','avatarUrl','coverUrl','theme','layout','layoutMode','createdAt'])
+    && u.keys().hasOnly(['username','displayName','bio','avatarUrl','coverUrl','theme','layout','layoutMode','createdAt'])
+    && usernameValid(u.username) && text(u.displayName,80) && u.displayName.size() > 0 && text(u.bio,500)
+    && url(u.avatarUrl,2048) && url(u.coverUrl,2048) && (u.theme == previous.theme || themeValid(u.theme)) && (u.layout == previous.layout || layoutValid(u.layout))
+    && u.layoutMode in ['tek','yan','iki'] && u.createdAt is timestamp;
+  }
+  function userUpdateValid(u, old) {
+   let changed = u.diff(old).affectedKeys();
+   return changed.hasOnly(['layout','layoutMode']) ? (u.layoutMode in ['tek','yan','iki'] && layoutValid(u.layout)) : changed.hasOnly(['displayName','bio','avatarUrl','coverUrl','theme'])
+    && (!changed.hasAny(['displayName']) || (text(u.displayName,80) && u.displayName.size() > 0))
+    && (!changed.hasAny(['bio']) || text(u.bio,500))
+    && (!changed.hasAny(['avatarUrl']) || url(u.avatarUrl,2048))
+    && (!changed.hasAny(['coverUrl']) || url(u.coverUrl,2048))
+    && (!changed.hasAny(['theme']) || themeValid(u.theme));
+  }
+  function pageLimited() { return request.query.limit != null && request.query.limit <= 12; }
+  match /users/{uid} {
+   allow get: if true;
+   allow list: if pageLimited();
+   allow create: if own(uid) && userValid(request.resource.data, {"theme": null, "layout": null}) && request.resource.data.createdAt == request.time
+    && getAfter(/databases/$(database)/documents/usernames/$(request.resource.data.username)).data.uid == uid;
+   allow update: if own(uid) && userUpdateValid(request.resource.data, resource.data);
+   allow delete: if own(uid);
+  }
+  match /usernames/{username} {
+   allow get: if true;
+   allow create: if signedIn() && usernameValid(username) && request.resource.data.keys().hasOnly(['uid'])
+    && request.resource.data.uid == request.auth.uid
+    && getAfter(/databases/$(database)/documents/users/$(request.auth.uid)).data.username == username;
+   allow update, delete, list: if false;
+  }
+  function postValid(p) {
+   return p.keys().hasAll(['authorId','authorUsername','authorName','title','titleLower','slug','content','excerpt','coverUrl','category','status','publishedAt','createdAt','updatedAt'])
+    && p.keys().hasOnly(['authorId','authorUsername','authorName','title','titleLower','slug','content','excerpt','coverUrl','category','status','publishedAt','createdAt','updatedAt'])
+    && text(p.authorId,128) && usernameValid(p.authorUsername) && text(p.authorName,80) && p.authorName.size() > 0
+    && text(p.title,160) && p.title.size() > 0 && text(p.titleLower,160) && p.titleLower.size() > 0
+    && text(p.slug,120) && p.slug.matches('^[a-z0-9-]+-[a-f0-9]{16}$')
+    && text(p.content,100000) && p.content.size() > 0 && text(p.excerpt,300) && url(p.coverUrl,2048)
+    && p.category in ['Yaşam','Tasarım','Teknoloji','Kültür & Sanat','Seyahat','Yeme & İçme','Edebiyat','Kişisel']
+    && p.status in ['draft','published'] && (p.publishedAt == null || p.publishedAt is timestamp)
+    && (p.status != 'published' || p.publishedAt is timestamp)
+    && p.createdAt is timestamp && p.updatedAt == request.time;
+  }
+  function authorMatches(p) {
+   return p.authorId == request.auth.uid
+    && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.username == p.authorUsername
+    && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.displayName == p.authorName;
+  }
+  match /posts/{postId} {
+   allow get: if resource.data.status == 'published' || own(resource.data.authorId);
+   allow list: if pageLimited() && (resource.data.status == 'published' || own(resource.data.authorId));
+   allow create: if signedIn() && postValid(request.resource.data) && authorMatches(request.resource.data)
+    && request.resource.data.createdAt == request.time
+    && (request.resource.data.publishedAt == null || request.resource.data.publishedAt == request.time);
+   allow update: if own(resource.data.authorId) && postValid(request.resource.data) && authorMatches(request.resource.data)
+    && request.resource.data.authorId == resource.data.authorId && request.resource.data.authorUsername == resource.data.authorUsername
+    && request.resource.data.slug == resource.data.slug && request.resource.data.createdAt == resource.data.createdAt
+    && (request.resource.data.publishedAt == resource.data.publishedAt || (resource.data.publishedAt == null && request.resource.data.publishedAt == request.time));
+   allow delete: if own(resource.data.authorId);
+  }
+ }
+}
